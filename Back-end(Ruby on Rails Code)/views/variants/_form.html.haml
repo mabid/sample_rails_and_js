@@ -1,0 +1,18 @@
+= form_for([:admin, @product, @variant], builder: Admin::SingletonFormBuilder) do |f|
+
+  = render 'admin/shared/form_errors', object: @variant
+
+  %table.form_singleton
+    = f.select        :variant_type_id, VariantType.for_select
+    = f.number_field  :retail_cad
+    = f.number_field  :retail_usd
+    = f.number_field  :wholesale_cad
+    = f.number_field  :wholesale_usd
+    = f.number_field  :cost
+    = f.text_field    :sku
+    = f.number_field  :on_hand
+    = f.number_field  :weight
+    = f.number_field  :height
+    = f.number_field  :width
+    = f.number_field  :depth
+    = f.submit 'Save'

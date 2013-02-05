@@ -1,0 +1,66 @@
+- title "Edit Order ##{@order.id} for #{@order.user_email_for_display}"
+
+%section.content
+
+  = render :partial => 'admin/order_items/templates', :content_type => "x-tmpl-mustache"
+
+  %header
+    %h2= "Editing Order ##{@order.id} for #{@order.user_email_for_display}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_orders_path
+
+  %section.details
+    = render 'admin/shared/flash_messages'
+
+    = form_for([:admin, @order], builder: Admin::SingletonFormBuilder) do |f|
+
+      = render 'admin/shared/form_errors', object: @order
+      = hidden_field_tag 'order_id', @order.id
+
+      %table.form_singleton
+        = f.select        :pay_status,  Order.pay_statuses
+        = f.select        :order_status, Order.order_statuses
+        = f.select        :ship_method, Order.ship_methods
+        = f.select        :pay_type, Order.pay_types
+        = f.text_area     :admin_note, :rows => "3"
+        = f.text_area     :customer_note, :rows => "3"
+        = f.submit 'Save'
+    %table.multiple
+      %thead
+        %tr
+          %th{colspan: 0}
+            %h6 Items
+            %nav.links_row
+              %ul
+                %li= link_to 'Add Item', '#', :class => 'dialg', :data => {'dialog-id' => '#new_order_item_form'}
+
+      %tbody
+
+        - if @order.order_items.present?
+          %tr
+            %th SKU
+            %th Product
+            %th Variant
+            %th.center Quantity
+            %th Price<br>Per<br>Unit
+            %th Tax<br>Per<br>Unit
+            %th
+          - @order.order_items.each do |order_item|
+            %tr{ class: cycle('odd', 'even'), data: { item_id: order_item.id} }
+              %td= order_item.variant_sku
+              %td= order_item.variant.product.name
+              %td= order_item.variant_name
+              %td.center= order_item.quantity
+              %td= number_to_currency order_item.price_per_unit
+              %td= number_to_currency order_item.tax_per_unit
+              %td
+                %nav.links_row
+                  %ul
+                    %li= link_to 'Edit', edit_admin_order_order_item_path(@order, order_item), :class => 'edit_order_item' , :data => {item_id: order_item.id}
+                    %li= link_to 'Delete', admin_order_order_item_path(@order, order_item), confirm: 'Are you sure?', method: :delete
+
+        - else
+          %tr
+            %td{colspan: 0} This order has no items.
+%div{style:'display:none;', id: 'new_order_item_form'}

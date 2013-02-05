@@ -1,0 +1,40 @@
+- title "Editing #{@product.name}'s traits"
+
+%section.content
+
+  %header
+    %h2= "Editing #{@product.name}'s traits"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_product_path(@product)
+
+  %section.details
+
+    - if @product.product_traits.present?
+
+      = form_for @product, url: update_traits_admin_product_path do |product_form|
+
+        = render 'admin/shared/form_errors', object: @product
+
+        %table.listed-attributes
+          %thead
+            %tr
+              %th Name
+              %th Value
+          %tbody
+            - @product.product_traits.each do |product_trait|
+              %tr
+                %td= label_tag product_trait.trait.name
+                %td
+                  = select_tag "product[product_traits_attributes][][value]", options_for_select(ProductTrait.valid_values, product_trait.value), prompt: 'n/a'
+                  = hidden_field_tag "product[product_traits_attributes][][id]", product_trait.id
+                  = hidden_field_tag "product[product_traits_attributes][][product_id]", @product.id
+                  = hidden_field_tag "product[product_traits_attributes][][trait_id]", product_trait.trait_id
+
+        = submit_tag 'Save'
+
+    - else
+
+      %p There are no traits in the system.
+      %p= link_to 'Create a trait', new_admin_trait_path
+

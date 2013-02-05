@@ -1,0 +1,13 @@
+- title 'New product'
+
+%section.content
+
+  %header
+    %h2 New product
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_products_path
+
+  %section.details
+
+    = render 'form'

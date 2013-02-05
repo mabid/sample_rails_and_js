@@ -1,0 +1,53 @@
+- title 'Orders'
+
+%section.content
+
+  %header
+    %h2 Orders
+    %nav.links_row
+      %ul
+        - if params[:search].present?
+          %li= link_to 'All Orders', admin_orders_path
+        %li= link_to 'New User Order', new_admin_order_path
+        %li= link_to 'New Guest Order', guest_order_admin_orders_path, :method => :post
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+    = will_paginate @orders
+
+    - if @orders.present?
+      %table.listing
+        %tr
+          %th= sortable 'id', 'Order<br>Number'
+          %th User
+          %th Total
+          %th.center= sortable 'pay_status', 'Pay<br>Status'
+          %th.center= sortable 'order_status', 'Order<br>Status'
+          %th.center= sortable 'ship_method', 'Ship<br>Method'
+          %th.center= sortable 'pay_type', 'Pay<br>Type'
+          %th Admin Note
+          %th Customer Note
+          %th
+
+        - @orders.each do |order|
+          %tr{ class: cycle('odd', 'even') }
+            %td= link_to order.id, admin_order_path(order)
+            %td= order.user_email_for_display
+            %td= number_to_currency order.total            
+            %td.center= select_tag 'order[pay_status]', options_for_select(Order.pay_statuses, order.pay_status), :data => {:type => 'pay_status', :id=> order.id}, :class => 'order_status_change'
+            %td.center= select_tag 'order[order_status]', options_for_select(Order.order_statuses, order.order_status), :data => {:type => 'order_status', :id=> order.id}, :class => 'order_status_change'
+            %td.center= order.ship_method
+            %td.center= order.pay_type
+            %td= truncate order.admin_note
+            %td= truncate order.customer_note
+            %td
+              %nav.links_row
+                %ul
+                  %li= link_to 'Edit', edit_admin_order_path(order)
+                  %li= link_to 'Delete', admin_order_path(order), confirm: 'Are you sure?', method: :delete
+
+    - else
+      %p No orders exist.
+
+

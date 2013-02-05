@@ -1,0 +1,18 @@
+- title 'Categories'
+
+%section.content
+
+  %header
+    %h2 Categories
+    %nav.links_row
+      %ul
+        %li= link_to 'New Category', new_admin_category_path
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    - if @categories.present?
+      = nested_categories @categories.arrange(order: :name)
+    - else
+      No categories exist.

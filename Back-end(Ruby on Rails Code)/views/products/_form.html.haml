@@ -1,0 +1,40 @@
+= form_for([:admin, @product], builder: Admin::SingletonFormBuilder) do |f|
+
+  = render 'admin/shared/form_errors', object: @product
+
+  %table.form_singleton
+    = f.text_field      :name
+    = f.check_box       :show_in_store
+    = f.check_box       :hidden
+    = f.check_box       :grindable
+    = f.check_box       :featured
+    = f.text_field      :order, size: 5
+    = f.text_field      :superscription, size: 70
+    = f.text_field      :subhead, size: 70
+    = f.text_area       :description, cols: 80
+    = f.text_area       :sidebar_text
+    = f.text_area       :excerpt
+    = f.text_area       :meta_keywords, cols: 80, rows: 3
+    = f.text_area       :meta_description, cols: 80, rows: 3
+    = f.file_field      :photo
+    - if @product.photo.present?
+      %tr
+        %td
+        %td= image_tag @product.photo.url
+    = f.file_field      :logo
+    - if @product.logo.present?
+      %tr
+        %td
+        %td= image_tag @product.logo.url
+    = f.file_field      :map
+    - if @product.map.present?
+      %tr
+        %td
+        %td= image_tag @product.map.url
+    = f.file_field      :related_item
+    - if @product.related_item.present?
+      %tr
+        %td
+        %td= image_tag @product.related_item.url
+    = f.submit 'Save'
+

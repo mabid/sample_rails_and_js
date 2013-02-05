@@ -1,0 +1,124 @@
+- title "Order ##{@order.id}"
+
+%section.content
+
+  %header
+    %h2= "Order ##{@order.id}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Edit', edit_admin_order_path(@order)
+        %li= link_to 'Delete', admin_order_path(@order), confirm: 'Are you sure?', method: :delete
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    %table.singleton
+      %thead
+        %tr
+          %th{colspan: 0} Summary
+      %tbody
+        %tr
+          %th User
+          %th Total
+          %th.center Pay<br>Status
+          %th.center Order<br>Status
+          %th.center Ship<br>Method
+          %th.center Pay<br>Type
+          %th Order Created
+        %tr
+          %td= @order.user_email_for_display
+          %td= number_to_currency @order.total
+          %td.center= @order.pay_status
+          %td.center= @order.order_status
+          %td.center= @order.ship_method
+          %td.center= @order.pay_type
+          %td= @order.created_at
+
+
+    %table.listed-attributes
+      %thead
+        %tr
+          %th{colspan: 0} Notes
+      %tbody
+        %tr
+          %th Admin Note:
+          %td= @order.admin_note
+        %tr
+          %th Customer Note:
+          %td= @order.customer_note
+
+
+    %table.multiple
+      %thead
+        %tr
+          %th{colspan: 0}
+            %h6 Items
+            %nav.links_row
+              %ul
+                %li= link_to 'Add Item', new_admin_order_order_item_path(@order)
+
+      %tbody
+
+        - if @order.order_items.present?
+          %tr
+            %th SKU
+            %th Product
+            %th Variant
+            %th.center Quantity
+            %th Price<br>Per<br>Unit
+            %th Tax<br>Per<br>Unit
+            %th
+          - @order.order_items.each do |order_item|
+            %tr{ class: cycle('odd', 'even') }
+              %td= order_item.variant_sku
+              %td= order_item.product_name
+              %td= order_item.variant_name
+              %td.center= order_item.quantity
+              %td= number_to_currency order_item.price_per_unit
+              %td= number_to_currency order_item.tax_per_unit
+              %td
+                %nav.links_row
+                  %ul
+                    %li= link_to 'Edit', edit_admin_order_order_item_path(@order, order_item)
+                    %li= link_to 'Delete', admin_order_order_item_path(@order, order_item), confirm: 'Are you sure?', method: :delete
+
+        - else
+          %tr
+            %td{colspan: 0} This order has no items.
+
+    %table.multiple
+      %thead
+        %tr
+          %th{colspan: 0}
+            %h6 Addresses
+            %nav.links_row
+              %ul
+                %li
+                  - unless @order.addresses.shipping.present? && @order.addresses.billing.present?
+                    = link_to 'Add New', new_admin_order_order_address_path(@order)
+
+      %tbody
+
+        - if @order.addresses.present?
+          %tr
+            %th Type
+            %th Name
+            %th Address
+            %th Email
+            %th
+          - @order.addresses.each do |address|
+            %tr{ class: cycle('odd', 'even') }
+              %td= address.type_for_display
+              %td= address.name_and_company_for_display
+              %td= address.full_address_for_display
+              %td= mail_to address.email if address.email.present?
+              %td
+                %nav.links_row
+                  %ul
+                    %li= link_to 'Edit', edit_admin_order_order_address_path(@order, address)
+                    %li= link_to 'Delete', admin_order_order_address_path(@order, address), confirm: 'Are you sure?', method: :delete
+
+        - else
+          %tr
+            %td{colspan: 0} This order has no addresses.

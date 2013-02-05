@@ -1,0 +1,24 @@
+- title 'New Order'
+
+%section.content
+
+  %header
+    %h2 New Order
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_orders_path
+
+  %section.details
+
+    = form_for([:admin, @order], builder: Admin::SingletonFormBuilder) do |f|
+
+      = render 'admin/shared/form_errors', object: @order
+
+      %table.form_singleton
+        %tr
+          %th
+          %td
+            = text_field_tag :order_user_email,"", autofocus: true, data: { autocomplete_source: admin_users_path }
+        = f.hidden_field  :user_id
+        = f.submit 'Begin Order'
+

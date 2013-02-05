@@ -1,0 +1,17 @@
+- title "Editing #{@product.name}'s categories"
+
+%section.content
+
+  %header
+    %h2= "Editing #{@product.name}'s categories"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_product_path(@product)
+
+  %section.details
+
+    = form_tag update_categories_admin_product_path, method: :put, class: 'product_categories' do
+      = hidden_field_tag 'product[category_ids][]', nil
+      = nested_categories_to_be_tagged @categories.arrange(order: :name)
+      = submit_tag 'Save'
+

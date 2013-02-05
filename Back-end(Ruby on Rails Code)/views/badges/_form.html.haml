@@ -1,0 +1,10 @@
+= form_for([:admin, @badge], builder: Admin::SingletonFormBuilder) do |f|
+
+  = render 'admin/shared/form_errors', object: @badge
+
+  %table.form_singleton
+    = f.text_field    :name
+    = f.number_field  :order
+    = f.file_field    :image
+    = f.submit 'Save'
+

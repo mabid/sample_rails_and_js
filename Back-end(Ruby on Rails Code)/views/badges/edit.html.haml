@@ -1,0 +1,15 @@
+- title "Edit #{@badge.name}"
+
+%section.content
+
+  %header
+    %h2= "Editing #{@badge.name}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_badges_path
+
+  %section.details
+
+    %p= image_tag @badge.image.url
+
+    = render 'form'

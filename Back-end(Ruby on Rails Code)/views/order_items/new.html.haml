@@ -1,0 +1,22 @@
+- title "Add item to order ##{@order.id}"
+
+%section.content
+
+  %header
+    %h2= "Add item to order ##{@order.id}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_order_path(@order)
+
+  %section.details
+
+    = form_for([:admin, @order, @order_item], builder: Admin::SingletonFormBuilder) do |f|
+
+      = render 'admin/shared/form_errors', object: @order_item
+
+      %table.form_singleton
+
+        = f.select        :product_name, Product.for_select
+        = f.select        :variant_id, [], {}, data: {variants: Variant.based_on_product_for_select}
+        = f.number_field  :quantity
+        = f.submit 'Save'

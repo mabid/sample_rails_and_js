@@ -1,0 +1,11 @@
+= form_for([:admin, @category], builder: Admin::SingletonFormBuilder) do |f|
+
+  = render 'admin/shared/form_errors', object: @category
+  
+  %table.form_singleton
+    = f.select     :parent_id, Category.parents_for_select
+    = f.text_field :name
+    = f.text_field :tag_line
+    = f.text_field :menu_order, size: 5
+    = f.submit 'Save'
+

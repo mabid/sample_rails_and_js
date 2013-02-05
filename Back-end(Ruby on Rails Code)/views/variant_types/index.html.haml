@@ -1,0 +1,32 @@
+- title 'Variant Types'
+
+%section.content
+
+  %header
+    %h2 Variant Types
+    %nav.links_row
+      %ul
+        %li= link_to 'New Variant Type', new_admin_variant_type_path
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    - if @variant_types.present?
+      %table.listing
+        %tr
+          %th Name
+
+        - @variant_types.each do |variant_type|
+          %tr{ class: cycle('odd', 'even') }
+            %td= link_to variant_type.name, admin_variant_type_path(variant_type)
+            %td
+              %nav.links_row
+                %ul
+                  %li= link_to 'Edit', edit_admin_variant_type_path(variant_type)
+                  %li= link_to 'Delete', admin_variant_type_path(variant_type), confirm: 'Are you sure?', method: :delete
+
+    - else
+      %p No variant types exist.
+
+

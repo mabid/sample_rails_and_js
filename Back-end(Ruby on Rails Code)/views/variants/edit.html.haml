@@ -1,0 +1,13 @@
+- title "Edit variant for #{@product.name}"
+
+%section.content
+
+  %header
+    %h2= "Editing variant for #{@product.name}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_product_path(@product)        
+
+  %section.details
+
+    = render 'form'

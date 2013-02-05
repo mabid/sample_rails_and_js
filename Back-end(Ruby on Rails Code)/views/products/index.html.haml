@@ -1,0 +1,42 @@
+- title 'Products'
+
+%section.content
+
+  %header
+    %h2 Products
+    %nav.links_row
+      %ul
+        %li= link_to 'New Product', new_admin_product_path
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    - if @products.present?
+
+      %table.listing
+        %tr
+          %th Name
+          %th Order
+          %th Show in Store
+          %th Hidden
+          %th Featured
+          %th Grindable
+
+        - @products.each do |product|
+          %tr{ class: cycle('odd', 'even') }
+            %td= link_to product.name, admin_product_path(product)
+            %td.center= product.order
+            %td.center= to_yes_no product.show_in_store
+            %td.center= to_yes_no product.hidden
+            %td.center= to_yes_no product.featured
+            %td.center= to_yes_no product.grindable
+            %td
+              %nav.links_row
+                %ul
+                  %li= link_to 'Edit', edit_admin_product_path(product)
+                  %li= link_to 'Delete', admin_product_path(product), confirm: 'Are you sure?', method: :delete
+
+    - else
+      %p No products exist.
+

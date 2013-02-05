@@ -1,0 +1,196 @@
+- title @product.name
+
+%section.content
+
+  %header
+    %h2= @product.name
+    %nav.links_row
+      %ul
+        %li= link_to 'Edit', edit_admin_product_path(@product)
+        %li= link_to 'Delete', admin_product_path(@product), confirm: 'Are you sure?', method: :delete
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    %table.singleton
+      %thead
+        %tr
+          %th{colspan: 0} Summary
+      %tbody
+        %tr
+          %th.center Order
+          %th.center Show in Store
+          %th.center Hidden
+          %th.center Featured
+          %th.center Grindable
+          %th Tax Category
+          %th Product Created
+          %th Product Last Updated
+        %tr
+          %td.center= @product.order
+          %td.center= to_yes_no @product.show_in_store
+          %td.center= to_yes_no @product.hidden
+          %td.center= to_yes_no @product.featured
+          %td.center= to_yes_no @product.grindable
+          %td= @product.tax_category_id
+          %td= @product.created_at
+          %td= @product.updated_at
+
+
+    %table.singleton
+      %thead
+        %tr
+          %th{colspan: 0} Images
+      %tbody
+        %tr
+          %th.center Logo
+          %th.center Photo
+          %th.center Map
+          %th.center Related Item
+        %tr.images
+          %td.center= image_tag @product.logo.url
+          %td.center= image_tag @product.photo.url
+          %td.center= image_tag @product.map.url
+          %td.center= image_tag @product.related_item.url
+
+
+    %table.multiple
+      %thead
+        %tr
+          %th{colspan: 0}
+            %h6 Variants
+            %nav.links_row
+              %ul
+                %li= link_to 'Add New', new_admin_product_variant_path(@product)
+
+      %tbody
+
+        - if @product.variants.present?
+          %tr
+            %th.center Type
+            %th.center Retail<br>CAD
+            %th.center Retail<br>USD
+            %th.center Wholesale<br>CAD
+            %th.center Wholesale<br>USD
+            %th.center Cost
+            %th.center Sku
+            %th.center On<br>Hand
+            %th.center Weight
+            %th.center Height
+            %th.center Width
+            %th.center Depth
+            %th
+          - @product.variants.each do |variant|
+            %tr{ class: cycle('odd', 'even') }
+              %td= variant.variant_type.name if variant.variant_type.present?
+              %td.center= number_to_currency variant.retail_cad
+              %td.center= number_to_currency variant.retail_usd
+              %td.center= number_to_currency variant.wholesale_cad
+              %td.center= number_to_currency variant.wholesale_usd
+              %td.center= number_to_currency variant.cost
+              %td.center= variant.sku
+              %td.center= variant.on_hand
+              %td.center= variant.weight
+              %td.center= variant.height
+              %td.center= variant.width
+              %td.center= variant.depth
+              %td
+                %nav.links_row
+                  %ul
+                    %li= link_to 'Edit', edit_admin_product_variant_path(@product, variant)
+                    %li= link_to 'Delete', admin_product_variant_path(@product, variant), confirm: 'Are you sure?', method: :delete
+
+        - else
+          %tr
+            %td{colspan: 0} This product has no variants.
+
+
+    %table.listed-attributes
+      %tbody
+        %tr
+          %th Name:
+          %td= @product.name
+        %tr
+          %th Superscription:
+          %td= raw @product.superscription
+        %tr
+          %th Subhead:
+          %td= raw @product.subhead
+        %tr
+          %th Description:
+          %td= raw @product.description
+        %tr
+          %th Excerpt:
+          %td= raw @product.excerpt
+        %tr
+          %th Sidebar Text:
+          %td= raw @product.sidebar_text
+        %tr
+          %th Meta Keywords:
+          %td= raw @product.meta_keywords
+        %tr
+          %th Meta Description:
+          %td= raw @product.meta_description
+
+
+
+    %section.subsection
+      %header
+        %h6 Categories
+        %nav.links_row
+          %ul
+            %li= link_to 'Edit', edit_categories_admin_product_path(@product)
+
+      %section.subsection-details
+        - if @product.categories.present?
+          = nested_categories_for_product_show @product.categories.arrange(order: :name)
+        - else
+          This product does not belong to any categories.
+
+
+    %table.listed-attributes
+      %thead
+        %tr
+          %th{colspan: 0}
+            Traits
+            %nav.links_row
+              %ul
+                %li= link_to 'Edit', edit_traits_admin_product_path(@product)
+
+      %tbody
+        - if @product.product_traits.present?
+          - @product.product_traits.each do |product_trait|
+            %tr
+              %th= "#{product_trait.trait.name}:"
+              %td= product_trait.value
+        - else
+          %tr
+            %td This product does not have to any traits.
+
+
+    %table.listed-attributes
+      %thead
+        %tr
+          %th{colspan: 0}
+            Badges
+            %nav.links_row
+              %ul
+                %li= link_to 'Edit', edit_badges_admin_product_path(@product)
+
+      %tbody
+        - if @product.badges.present?
+          - @product.badges.each do |badge|
+            %tr
+              %td.center
+                = "#{badge.name}"
+                %br
+                = image_tag badge.image.url
+        - else
+          %tr
+            %td This product does not have to any badges.
+
+
+
+
+

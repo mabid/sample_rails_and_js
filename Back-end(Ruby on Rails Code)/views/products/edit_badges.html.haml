@@ -1,0 +1,39 @@
+- title "Editing #{@product.name}'s badges"
+
+%section.content
+
+  %header
+    %h2= "Editing #{@product.name}'s badges"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_product_path(@product)
+
+  %section.details
+
+    - if @badges.present?
+      = form_tag update_badges_admin_product_path, method: :put do
+        = render 'admin/shared/form_errors', object: @product
+        = hidden_field_tag 'product[badge_ids][]', nil
+
+        %table.listed-attributes
+          %thead
+            %tr
+              %th.center Badge
+              %th
+
+          %tbody
+            - @badges.each do |badge|
+              %tr
+                %td.center
+                  = label_tag dom_id(badge), badge.name
+                  %br
+                  = image_tag badge.image.url
+                %td= check_box_tag('product[badge_ids][]', badge.id, @product.badge_ids.include?(badge.id), id: dom_id(badge))
+
+        = submit_tag 'Save'
+
+    - else
+
+      %p There are no badges in the system.
+      %p= link_to 'Create a badge', new_admin_badge_path
+

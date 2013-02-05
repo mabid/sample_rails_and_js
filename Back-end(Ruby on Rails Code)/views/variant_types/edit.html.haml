@@ -1,0 +1,13 @@
+- title "Edit #{@variant_type.name}"
+
+%section.content
+
+  %header
+    %h2= "Editing #{@variant_type.name}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_variant_types_path
+
+  %section.details
+
+    = render 'form'

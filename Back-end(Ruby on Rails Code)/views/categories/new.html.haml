@@ -1,0 +1,13 @@
+- title 'New category'
+
+%section.content
+
+  %header
+    %h2 New category
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_categories_path
+
+  %section.details
+
+    = render 'form'

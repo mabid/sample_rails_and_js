@@ -1,0 +1,101 @@
+%script{:type=>"x-tmpl-mustache", :id => "tpl", :charset => "utf-8"}
+  - title 'Add item to order #{{id}}'
+
+  %section.content
+
+    %header
+      %h2= 'Add item to order #{{id}}'
+      %nav.links_row
+        %ul
+          %li= link_to 'Cancel', '', :class => 'close_dialg'
+
+    %section.details
+
+      = form_tag '', :remote => true, :id => 'new_order_item_from'
+      %table.form_singleton
+        %tr
+          %th
+            %label Product Name:
+          %td
+            = select_tag :order_item_product_name, options_from_collection_for_select(Product.with_variants, "id", "name"), {name: 'order_item[product_name]'}
+        %tr
+          %th
+            %label Variant:
+          %td
+            = select_tag :order_item_variant_id, "", {data: {variants: Variant.based_on_product_for_select }, name: 'order_item[variant_id]'}
+        %tr
+          %th
+            %label Quantity:
+          %td
+            = number_field_tag  'order_item[quantity]'
+        %tr
+          %th
+          %td
+            = submit_tag 'Save'
+
+%script{:type=>"x-tmpl-mustache", :id => 'tpl_order_item', :charset => "utf-8"}
+  %tr{data: {item_id: '{{id}}'}}
+    %td
+      {{variant_sku}}
+    %td
+      {{#variant}}{{#product}}{{name}}{{/product}}{{/variant}}
+    %td
+      {{variant_name}}
+    %td.center
+      {{quantity}}
+    %td
+      {{price_per_unit}}
+    %td
+      {{tax_per_unit}}
+    %td
+      %nav.links_row
+        %ul
+          %li= link_to 'Edit','', :class => 'edit_order_item', :data => {item_id: '{{id}}'}
+          %li= link_to 'Delete', '', confirm: 'Are you sure?', method: :delete
+
+
+%script{:type=>"x-tmpl-mustache", :id => "tpl_edit_order_item", :charset => "utf-8"}
+
+  %div
+    %section.content
+      %header
+        %h2= "Edit item for order \#{{#order}}{{id}}{{/order}}"
+        %nav.links_row
+          %ul
+            %li= link_to 'Cancel', '', :class => 'close_dialg'
+
+      %section.details
+
+        = form_tag '', :remote => true, :id => 'edit_order_item_from', :method => 'PUT'
+        %table.form_singleton
+          %tr{data:{id:"{{id}}"}}
+            %th
+              %label Product Name:
+            %td
+              = select_tag :order_item_product_name, options_from_collection_for_select(Product.with_variants, "id", "name"), {name: 'order_item[product_name]'}
+          %tr
+            %th
+              %label Variant:
+            %td
+              = select_tag :order_item_variant_id, "", {data: {variants: Variant.based_on_product_for_select }, name: 'order_item[variant_id]'}
+          %tr
+            %th
+              %label Quantity:
+            %td
+              = number_field_tag  'order_item[quantity]', '{{quantity}}'
+          %tr
+            %th
+            %td
+              = submit_tag 'Save'
+%script{:type=>"x-tmpl-mustache", :id => "tpl_items_header", :charset => "utf-8"}
+  %tr
+    %th SKU
+    %th Product
+    %th Variant
+    %th{:class => 'center'}
+      Quantity
+    %th
+      Price<br>Per<br>Unit
+    %th
+      Tax<br>Per<br>Unit
+    %th>

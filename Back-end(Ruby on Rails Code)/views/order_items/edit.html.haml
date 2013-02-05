@@ -1,0 +1,25 @@
+- title "Edit item for order ##{@order_item.order.id}"
+
+%section.content
+
+  %header
+    %h2= "Editing item for order ##{@order_item.order.id}"
+    %nav.links_row
+      %ul
+        %li= link_to 'Cancel', admin_order_path(@order_item.order)
+
+  %section.details
+
+    = form_for([:admin, @order_item.order, @order_item], builder: Admin::SingletonFormBuilder) do |f|
+
+      = render 'admin/shared/form_errors', object: @order_item
+
+      %table.form_singleton
+
+        = f.text_field    :variant_sku
+        = f.text_field    :product_name
+        = f.text_field    :variant_name
+        = f.number_field  :quantity
+        = f.number_field  :price_per_unit
+        = f.number_field  :tax_per_unit
+        = f.submit 'Save'

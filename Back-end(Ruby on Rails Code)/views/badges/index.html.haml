@@ -1,0 +1,37 @@
+- title 'Badges'
+
+%section.content
+
+  %header
+    %h2 Badges
+    %nav.links_row
+      %ul
+        %li= link_to 'New Badge', new_admin_badge_path
+
+  %section.details
+
+    = render 'admin/shared/flash_messages'
+
+    - if @badges.present?
+      %table.listing
+        %tr
+          %th.center Image
+          %th Name
+          %th Order
+          %th          
+
+        - @badges.each do |badge|
+          %tr{ class: cycle('odd', 'even') }
+            %td.center= image_tag badge.image.url
+            %td= badge.name
+            %td= badge.order
+            %td
+              %nav.links_row
+                %ul
+                  %li= link_to 'Edit', edit_admin_badge_path(badge)
+                  %li= link_to 'Delete', admin_badge_path(badge), confirm: 'Are you sure?', method: :delete
+
+    - else
+      %p No badges exist.
+
+
